@@ -9,25 +9,18 @@
  *  +----------------------------------------------------------------------
  *  | Author: hahadu <582167246@qq.com>
  *  +----------------------------------------------------------------------
- *  | Date: 2020/10/9 下午5:56
+ *  | Date: 2020/10/9 下午10:50
  *  +----------------------------------------------------------------------
  *  | Description:   ImAdminThink
  *  +----------------------------------------------------------------------
  **/
 
-namespace Hahadu\ThinkPayment\AlipayLibrary;
+namespace Hahadu\ThinkPayment\Response;
 
-trait AlipayTrait
+
+class AlipayCheckResponse
 {
-    public function response_checker($check_data){
-        if ($this->success($check_data)){
-            return $check_data;
-        } else {
-            $check_data['status_message'] = 'error';
-            return $check_data;
-        }
-    }
-    public function success($response)
+    static public function success($response)
     {
         if (!empty($response->code) && $response->code == 10000) {
             return true;
@@ -37,4 +30,5 @@ trait AlipayTrait
         }
         return false;
     }
+
 }

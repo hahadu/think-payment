@@ -19,12 +19,17 @@ namespace Hahadu\ThinkPayment;
 use Alipay\EasySDK\Kernel\Factory;
 use Alipay\EasySDK\Payment\Huabei\Models\HuabeiConfig;
 use Hahadu\ThinkPayment\AlipayLibrary\AlipayTrait;
+use Hahadu\ThinkPayment\Response\AlipayCheckResponse as aliCheck;
+use Hahadu\ThinkPayment\PayOptions as payConf;
+use think\facade\Config;
 
-class Alipay extends PayBaseClass
+class Alipay
 {
     use AlipayTrait;
+    private $alipay_config;
     public function __construct(){
-        parent::__construct();
+        $this->alipay_config = Config::get('pay.aliPay');
+        //parent::__construct();
     }
 
     /****
@@ -36,13 +41,17 @@ class Alipay extends PayBaseClass
      * @throws \Exception
      */
     public function pc_pay($subject,$out_trade_no,$total_amount){
-        Factory::setOptions($this->getAlipayOptions());
+        Factory::setOptions(payConf::getAlipayOptions());
         try {
             //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
             $result = Factory::payment()->page()->pay($subject, $out_trade_no, $total_amount, $this->alipay_config['return_url']);
-            return $this->response_checker($result);
+            if (aliCheck::success($result)){
+                return $result->body;
+            } else {
+                return $result;
+            }
         } catch (Exception $e) {
-            return json_encode($e->getMessage());
+            return $e->getMessage();
         }
     }
 
@@ -56,11 +65,15 @@ class Alipay extends PayBaseClass
      * @throws \Exception
      */
     public function wap_pay($subject,$out_trade_no,$total_amount,$quit_url){
-        Factory::setOptions($this->getAlipayOptions());
+        Factory::setOptions(payConf::getAlipayOptions());
         try {
             //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
             $result = Factory::payment()->wap()->pay($subject, $out_trade_no, $total_amount,$quit_url, $this->alipay_config['return_url']);
-            return $this->response_checker($result);
+            if (aliCheck::success($result)){
+                return $result->body;
+            } else {
+                return $result;
+            }
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -75,11 +88,15 @@ class Alipay extends PayBaseClass
      * @throws \Exception
      */
     public function app_pay($subject,$out_trade_no,$total_amount){
-        Factory::setOptions($this->getAlipayOptions());
+        Factory::setOptions(payConf::getAlipayOptions());
         try {
             //2. 发起API调用（以支付能力下的统一收单交易创建接口为例）
             $result = Factory::payment()->app()->pay($subject, $out_trade_no, $total_amount);
-            return $this->response_checker($result);
+            if (aliCheck::success($result)){
+                return $result->body;
+            } else {
+                return $result;
+            }
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -94,10 +111,14 @@ class Alipay extends PayBaseClass
      * @throws \Exception
      */
     public function huabei_order($subject,$out_trade_no,$total_amount,$buyer_id ,HuabeiConfig $extendParams){
-        Factory::setOptions($this->getAlipayOptions());
+        Factory::setOptions(payConf::getAlipayOptions());
         try{
             $result = Factory::payment()->huabei()->create($subject,$out_trade_no,$total_amount, $buyer_id, $extendParams);
-            return $this->response_checker($result);
+            if (aliCheck::success($result)){
+                return $result->httpBody;
+            } else {
+                return $result;
+            }
         }catch (Exception $e){
             return $e->getMessage();
         }
@@ -112,12 +133,42 @@ class Alipay extends PayBaseClass
      * @throws \Exception
      */
     public function alipay_refund($out_trade_no, $refund_amount){
-        Factory::setOptions($this->getAlipayOptions());
+        Factory::setOptions(payConf::getAlipayOptions());
         try{
             $result = Factory::payment()->common()->refund($out_trade_no, $refund_amount);
-            return $this->response_checker($result)->httpBody;
+            if (aliCheck::success($result)){
+                return $result->httpBody;
+            } else {
+                return $result;
+            }
         }catch (Exception $e){
             return $e->getMessage();
         }
     }
+
+    /****
+     * 退款查询
+     * @param string $out_trade_no 订单支付时传入的商户订单号
+     * @param string $out_request_no 请求退款接口时，传入的退款请求号 ，如果在退款请求时未传入，则该值为创建交易时的外部交易号
+     * @return \Alipay\EasySDK\Payment\Common\Models\AlipayTradeFastpayRefundQueryResponse|string
+     * @throws \Exception
+     */
+    public function query_refund($out_trade_no,$out_request_no){
+        Factory::setOptions(payConf::getAlipayOptions());
+        try{
+            $result = Factory::payment()->common()->queryRefund($out_trade_no, $out_request_no);
+            if (aliCheck::success($result)){
+                if(!empty($result->refundStatus or $result->refundStatus !== 'REFUND_SUCCESS')){
+                    return $result;
+                }
+                return $result->httpBody;
+            } else {
+                return $result;
+            }
+        }catch (Exception $e){
+            return $e->getMessage();
+        }
+
+    }
+
 }

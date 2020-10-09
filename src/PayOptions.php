@@ -20,19 +20,17 @@ use Alipay\EasySDK\Kernel\Config as alipayConfig;
 use think\App;
 use think\facade\Config;
 
-class PayBaseClass
+class PayOptions
 {
     const SDK_VERSION  = "think-pay v1.0";
-    protected $alipay_config;
     public function __construct(){
-        $this->alipay_config = Config::get('pay.aliPay');
     }
 
     /****
      * 支付宝配置相关
      * @return alipayConfig
      */
-    public function getAlipayOptions(){
+    static public function getAlipayOptions(){
         $options = new alipayConfig();
         $options->protocol = 'https';
         $options->gatewayHost = 'openapi.alipay.com';
