@@ -2,11 +2,12 @@
 /**
 * 2015-06-29 修复签名问题
 **/
-require_once "WxPay.Config.Interface.php";
-require_once "WxPay.Exception.php";
+//namespace Hahadu\ThinkPayment\WxpayLibrary;
+require_once __DIR__."WxPay.Config.Interface.php";
+require_once __DIR__."WxPay.Exception.php";
 
 /**
- * 
+ *
  * 数据对象基础类，该类中定义数据类最基本的行为，包括：
  * 计算/设置/获取签名、输出xml格式的参数、从xml读取数据对象等
  * @author widyhu
@@ -18,7 +19,7 @@ class WxPayDataBase
 
 	/**
 	* 设置签名，详见签名生成算法类型
-	* @param string $value 
+	* @param string $value
 	**/
 	public function SetSignType($sign_type)
 	{
@@ -28,7 +29,7 @@ class WxPayDataBase
 
 	/**
 	* 设置签名，详见签名生成算法
-	* @param string $value 
+	* @param string $value
 	**/
 	public function SetSign($config)
 	{
@@ -36,7 +37,7 @@ class WxPayDataBase
 		$this->values['sign'] = $sign;
 		return $sign;
 	}
-	
+
 	/**
 	* 获取签名，详见签名生成算法的值
 	* @return 值
@@ -45,7 +46,7 @@ class WxPayDataBase
 	{
 		return $this->values['sign'];
 	}
-	
+
 	/**
 	* 判断签名，详见签名生成算法是否存在
 	* @return true 或 false
@@ -65,7 +66,7 @@ class WxPayDataBase
 		{
     		throw new WxPayException("数组数据异常！");
     	}
-    	
+
     	$xml = "<xml>";
     	foreach ($this->values as $key=>$val)
     	{
@@ -76,7 +77,7 @@ class WxPayDataBase
     		}
         }
         $xml.="</xml>";
-        return $xml; 
+        return $xml;
 	}
 
     /**
@@ -85,7 +86,7 @@ class WxPayDataBase
      * @throws WxPayException
      */
 	public function FromXml($xml)
-	{	
+	{
 		if(!$xml){
 			throw new WxPayException("xml数据异常！");
 		}
@@ -95,7 +96,7 @@ class WxPayDataBase
         $this->values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA)), true);
 		return $this->values;
 	}
-	
+
 	/**
 	 * 格式化参数格式化成url参数
 	 */
@@ -108,11 +109,11 @@ class WxPayDataBase
 				$buff .= $k . "=" . $v . "&";
 			}
 		}
-		
+
 		$buff = trim($buff, "&");
 		return $buff;
 	}
-	
+
 	/**
 	 * 生成签名
 	 * @param WxPayConfigInterface $config  配置对象
@@ -137,12 +138,12 @@ class WxPayDataBase
 		} else {
 			throw new WxPayException("签名类型不支持！");
 		}
-		
+
 		//签名步骤四：所有字符转为大写
 		$result = strtoupper($string);
 		return $result;
 	}
-	
+
 	/**
 	 * 获取设置的值
 	 */
@@ -151,7 +152,7 @@ class WxPayDataBase
 		return $this->values;
 	}
 }
-
+//------------
 /**
  *
  * 只使用md5算法进行签名， 不管配置的是什么签名方式，都只支持md5签名方式
@@ -182,7 +183,7 @@ class WxPayDataBaseSignMd5 extends WxPayDataBase
 		return $result;
 	}
 }
-
+//------------
 /**
  * 
  * 接口调用结果类
@@ -297,7 +298,7 @@ class WxPayResults extends WxPayDataBase
         return $obj->GetValues();
 	}
 }
-
+//--------------
 /**
  *
  * 回调回包数据基类
@@ -321,7 +322,7 @@ class WxPayNotifyResults extends WxPayResults
         return $obj;
 	}
 }
-
+//---------------
 /**
  * 
  * 回调基础类
@@ -381,7 +382,7 @@ class WxPayNotifyReply extends  WxPayDataBaseSignMd5
 		$this->values[$key] = $value;
 	}
 }
-
+//-------------
 /**
  * 
  * 统一下单输入对象
@@ -856,7 +857,7 @@ class WxPayUnifiedOrder extends WxPayDataBase
 		return array_key_exists('openid', $this->values);
 	}
 }
-
+//-------------
 /**
  * 
  * 订单查询输入对象
@@ -994,7 +995,7 @@ class WxPayOrderQuery extends WxPayDataBase
 		return array_key_exists('nonce_str', $this->values);
 	}
 }
-
+//--------------
 /**
  * 
  * 关闭订单输入对象
@@ -1106,7 +1107,7 @@ class WxPayCloseOrder extends WxPayDataBase
 		return array_key_exists('nonce_str', $this->values);
 	}
 }
-
+//----------------
 /**
  * 
  * 提交退款输入对象
@@ -1399,7 +1400,7 @@ class WxPayRefund extends WxPayDataBase
 		return array_key_exists('op_user_id', $this->values);
 	}
 }
-
+//---------------
 /**
  * 
  * 退款查询输入对象
@@ -1614,7 +1615,7 @@ class WxPayRefundQuery extends WxPayDataBase
 		return array_key_exists('refund_id', $this->values);
 	}
 }
-
+//---------------
 /**
  * 
  * 下载对账单输入对象
@@ -1777,7 +1778,7 @@ class WxPayDownloadBill extends WxPayDataBase
 		return array_key_exists('bill_type', $this->values);
 	}
 }
-
+//-------------------
 /**
  * 
  * 测速上报输入对象
@@ -2149,7 +2150,7 @@ class WxPayReport extends WxPayDataBase
 		return array_key_exists('time', $this->values);
 	}
 }
-
+//----------------
 /**
  * 
  * 短链转换输入对象
@@ -2261,7 +2262,7 @@ class WxPayShortUrl extends WxPayDataBase
 		return array_key_exists('nonce_str', $this->values);
 	}
 }
-
+///-------------
 /**
  * 
  * 提交被扫输入对象
@@ -2657,7 +2658,7 @@ class WxPayMicroPay extends WxPayDataBase
 		return array_key_exists('auth_code', $this->values);
 	}
 }
-
+///----------------
 /**
  * 
  * 撤销输入对象
@@ -2795,7 +2796,7 @@ class WxPayReverse extends WxPayDataBase
 		return array_key_exists('nonce_str', $this->values);
 	}
 }
-
+///----------------
 /**
  * 
  * 提交JSAPI输入对象
@@ -2956,7 +2957,7 @@ class WxPayJsApiPay extends WxPayDataBase
 		return array_key_exists('paySign', $this->values);
 	}
 }
-
+///----------------
 /**
  * 
  * 扫码支付模式一生成二维码参数
@@ -3091,4 +3092,4 @@ class WxPayBizPayUrl extends WxPayDataBaseSignMd5
 		return array_key_exists('product_id', $this->values);
 	}
 }
-
+///--------------

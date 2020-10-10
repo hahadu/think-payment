@@ -38,18 +38,6 @@ trait AlipayTrait
         return false;
     }
 
-    public function verify($params){
-        $sign = $params['sign'];
-        unset($params['sign_type'], $params['sign']);
-        dump($sign);
-
-        return $params;
-
-
-
-    }
-
-
     /**
      * 校验$value是否非空
      *  if not set ,return true;

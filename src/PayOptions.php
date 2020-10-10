@@ -17,6 +17,7 @@
 
 namespace Hahadu\ThinkPayment;
 use Alipay\EasySDK\Kernel\Config as alipayConfig;
+use Hahadu\ThinkPayment\WxpayLibrary\config\Config as WxConfig;
 use think\facade\Config;
 
 class PayOptions
@@ -47,6 +48,17 @@ class PayOptions
         $options->notifyUrl = Config::get('pay.aliPay.notify_url');
         //可设置AES密钥，调用AES加解密相关接口时需要（可选）
         $options->encryptKey = Config::get('pay.aliPay.alipay_encrypt_key');
+        return $options;
+    }
+    static public function getWxpayOptions(){
+        $options = new WxConfig();
+        $options->AppId = Config::get('pay.wxPay.appid');
+        $options->MerchantId = Config::get('pay.wxPay.mch_id');
+        $options->NotifyUrl = Config::get('pay.wxPay.notify_url');
+        $options->Key = Config::get('pay.wxPay.key');
+        $options->AppSecret = Config::get('pay.wxPay.app_secret');
+        $options->SignType = Config::get('pay.wxPay.sign_type');
+
         return $options;
     }
 

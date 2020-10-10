@@ -22,6 +22,7 @@ use Hahadu\ThinkPayment\AlipayLibrary\AlipayTrait;
 use Hahadu\ThinkPayment\Response\AlipayCheckResponse as aliCheck;
 use Hahadu\ThinkPayment\PayOptions as payConf;
 use think\facade\Config;
+use function Stringy\create;
 
 class Alipay implements PayInterface
 {
@@ -33,7 +34,7 @@ class Alipay implements PayInterface
     }
 
     /****
-     * pc网页下单
+     * pc网页付款
      * @param string $subject 订单标题
      * @param string $out_trade_no 商户网站唯一订单号
      * @param string $total_amount 订单金额
@@ -56,7 +57,7 @@ class Alipay implements PayInterface
     }
 
     /****
-     * 手机网页下单
+     * 手机网页付款
      * @param string $subject 订单标题
      * @param string $out_trade_no 商户网站唯一订单号
      * @param string $total_amount 订单金额
@@ -80,7 +81,7 @@ class Alipay implements PayInterface
     }
 
     /****
-     * app下单
+     * app付款
      * @param string $subject 订单标题
      * @param string $out_trade_no 商户网站唯一订单号
      * @param string $total_amount 订单金额
@@ -99,6 +100,45 @@ class Alipay implements PayInterface
             }
         } catch (Exception $e) {
             return $e->getMessage();
+        }
+    }
+    /****
+     * 小程序付款
+     * 获取https://opendocs.alipay.com/mini/introduce/pay
+     * @param string $subject 订单标题
+     * @param string $out_trade_no 商户网站唯一订单号
+     * @param string $total_amount 订单金额
+     * @param string $buyer_id 用户pid 支付宝小程序支付场景中该参数必传
+     * @return false|string
+     * @throws \Exception
+     */
+    public function mini_pay($subject,$out_trade_no,$total_amount,$buyer_id){
+        Factory::setOptions(payConf::getAlipayOptions());
+        try{
+            $result = Factory::payment()->common()->create($subject,$out_trade_no,$total_amount,$buyer_id);
+            if (aliCheck::success($result)){
+                return $result->tradeNo; //获取返回的tradeNo
+            } else {
+                return $result;
+            }
+        }catch (Exception $e){
+            return $e->getMessage();
+        }
+    }
+
+    /****
+     * 生成交易付款码，用户扫码付款
+     * @param string $subject 订单标题
+     * @param string $out_trade_no 商户网站唯一订单号
+     * @param string $total_amount 订单金额
+     * @throws \Exception
+     */
+    public function scan_pay($subject,$out_trade_no,$total_amount){
+        Factory::setOptions(payConf::getAlipayOptions());
+        try{
+            $result = Factory::payment()->faceToFace()->preCreate($subject,$out_trade_no,$total_amount);
+        }catch (Exception $e){
+
         }
     }
 
@@ -200,7 +240,6 @@ class Alipay implements PayInterface
         }catch (Exception $e){
             return $e->getMessage();
         }
-
     }
 
 
