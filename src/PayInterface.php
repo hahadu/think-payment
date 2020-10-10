@@ -63,5 +63,12 @@ interface PayInterface
      */
     public function refund($out_trade_no, $refund_amount);
 
+    /****
+     * 验签接口
+     * @param array $param_data
+     * @return bool|string|string[]
+     */
+    public function verify($param_data);
+
 
 }
