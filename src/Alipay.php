@@ -11,7 +11,7 @@
  *  +----------------------------------------------------------------------
  *  | Date: 2020/10/8 下午11:22
  *  +----------------------------------------------------------------------
- *  | Description:   ImAdminThink
+ *  | Description:   think-payment
  *  +----------------------------------------------------------------------
  **/
 
@@ -23,13 +23,13 @@ use Hahadu\ThinkPayment\Response\AlipayCheckResponse as aliCheck;
 use Hahadu\ThinkPayment\PayOptions as payConf;
 use think\facade\Config;
 
-class Alipay
+class Alipay implements PayInterface
 {
     use AlipayTrait;
     private $alipay_config;
     public function __construct(){
         $this->alipay_config = Config::get('pay.aliPay');
-        //parent::__construct();
+
     }
 
     /****
@@ -103,6 +103,7 @@ class Alipay
     }
 
     /****
+     * 创建花呗分期订单
      * @param string $subject
      * @param string $out_trade_no
      * @param string $total_amount
@@ -132,7 +133,7 @@ class Alipay
      * @return false|mixed|string
      * @throws \Exception
      */
-    public function alipay_refund($out_trade_no, $refund_amount){
+    public function refund($out_trade_no, $refund_amount){
         Factory::setOptions(payConf::getAlipayOptions());
         try{
             $result = Factory::payment()->common()->refund($out_trade_no, $refund_amount);
@@ -168,7 +169,39 @@ class Alipay
         }catch (Exception $e){
             return $e->getMessage();
         }
+    }
+
+    public function query($out_trade_no){
+        Factory::setOptions(payConf::getAlipayOptions());
+        try{
+            $result = Factory::payment()->common()->query($out_trade_no);
+            if (aliCheck::success($result)){
+                return $result->httpBody;
+            } else {
+                return $result;
+            }
+        }catch (Exception $e){
+            return $e->getMessage();
+        }
+    }
+
+    /****
+     * 支付宝异步验签
+     * @param array $param_data
+     * @return bool|string|string[]
+     * @throws \Exception
+     */
+    public function verify($param_data){
+        $option_data = payConf::getAlipayOptions();
+        Factory::setOptions($option_data);
+        try{
+            $result = Factory::payment()->common()->verifyNotify($param_data);
+            return $result;
+        }catch (Exception $e){
+            return $e->getMessage();
+        }
 
     }
+
 
 }

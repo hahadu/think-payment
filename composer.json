@@ -1,0 +1,35 @@
+{
+    "name": "hahadu/think-payment",
+    "description": "",
+    "type": "think-extend",
+    "require": {
+        "php": ">=7.1",
+        "alipaysdk/easysdk": "^2.0"
+
+    },
+    "require-dev": {
+        "php": ">=7.1"
+
+    },
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "hahadu",
+            "email": "582167246@qq.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Hahadu\\ThinkPayment\\": "src/"
+        }
+    },
+    "extra": {
+        "think": {
+            "config": {
+                "pay": "config/pay.php"
+            }
+        }
+    },
+
+    "minimum-stability": "dev"
+}

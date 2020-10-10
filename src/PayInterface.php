@@ -11,7 +11,7 @@
  *  +----------------------------------------------------------------------
  *  | Date: 2020/10/9 下午7:38
  *  +----------------------------------------------------------------------
- *  | Description:   ImAdminThink
+ *  | Description:   think-payment
  *  +----------------------------------------------------------------------
  **/
 
@@ -49,11 +49,19 @@ interface PayInterface
     public function app_pay($subject,$out_trade_no,$total_amount);
 
     /****
+     * 订单查询
+     * @param string $out_trade_no 商户订单号
+     * @return mixed
+     */
+    public function query($out_trade_no);
+
+    /****
      * 退款接口
      * @param string $out_trade_no
      * @param string $refund_amount
      * @return mixed
      */
     public function refund($out_trade_no, $refund_amount);
+
 
 }

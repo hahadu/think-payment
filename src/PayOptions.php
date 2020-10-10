@@ -11,18 +11,17 @@
  *  +----------------------------------------------------------------------
  *  | Date: 2020/10/8 下午11:27
  *  +----------------------------------------------------------------------
- *  | Description:   ImAdminThink
+ *  | Description:   think-payment
  *  +----------------------------------------------------------------------
  **/
 
 namespace Hahadu\ThinkPayment;
 use Alipay\EasySDK\Kernel\Config as alipayConfig;
-use think\App;
 use think\facade\Config;
 
 class PayOptions
 {
-    const SDK_VERSION  = "think-pay v1.0";
+    const SDK_VERSION  = "think-payment Beta";
     public function __construct(){
     }
 
@@ -34,7 +33,7 @@ class PayOptions
         $options = new alipayConfig();
         $options->protocol = 'https';
         $options->gatewayHost = 'openapi.alipay.com';
-        $options->signType = 'RSA2';
+        $options->signType = Config::get('pay.aliPay.sign_type');
         $options->appId = Config::get('pay.aliPay.app_id');
 
         // 为避免私钥随源码泄露，推荐从文件中读取私钥字符串而不是写入源码中

@@ -11,7 +11,7 @@
  *  +----------------------------------------------------------------------
  *  | Date: 2020/10/9 下午5:56
  *  +----------------------------------------------------------------------
- *  | Description:   ImAdminThink
+ *  | Description:   think-payment
  *  +----------------------------------------------------------------------
  **/
 
@@ -19,7 +19,7 @@ namespace Hahadu\ThinkPayment\AlipayLibrary;
 
 trait AlipayTrait
 {
-    public function response_checker($check_data){
+    protected function response_checker($check_data){
         if ($this->success($check_data)){
             return $check_data;
         } else {
@@ -27,7 +27,7 @@ trait AlipayTrait
             return $check_data;
         }
     }
-    public function success($response)
+    protected function success($response)
     {
         if (!empty($response->code) && $response->code == 10000) {
             return true;
@@ -37,4 +37,35 @@ trait AlipayTrait
         }
         return false;
     }
+
+    public function verify($params){
+        $sign = $params['sign'];
+        unset($params['sign_type'], $params['sign']);
+        dump($sign);
+
+        return $params;
+
+
+
+    }
+
+
+    /**
+     * 校验$value是否非空
+     *  if not set ,return true;
+     *  if is null , return true;
+     * @param $value
+     * @return bool
+     */
+    protected function checkEmpty($value) {
+        if (!isset($value))
+            return true;
+        if ($value === null)
+            return true;
+        if (trim($value) === "")
+            return true;
+
+        return false;
+    }
+
 }
