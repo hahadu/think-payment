@@ -17,7 +17,8 @@
 
 namespace Hahadu\ThinkPayment;
 use Alipay\EasySDK\Kernel\Config as alipayConfig;
-use Hahadu\ThinkPayment\WxpayLibrary\config\Config as WxConfig;
+use Hahadu\WechatPay\Kernel\config\Config as WxConfig;
+use Hahadu\WechatPay\Kernel\config\WxPayConfig;
 use think\facade\Config;
 
 class PayOptions
@@ -52,14 +53,16 @@ class PayOptions
     }
     static public function getWxpayOptions(){
         $options = new WxConfig();
-        $options->AppId = Config::get('pay.wxPay.appid');
+        $options->AppId = Config::get('pay.wxPay.app_id');
         $options->MerchantId = Config::get('pay.wxPay.mch_id');
         $options->NotifyUrl = Config::get('pay.wxPay.notify_url');
         $options->Key = Config::get('pay.wxPay.key');
         $options->AppSecret = Config::get('pay.wxPay.app_secret');
-        $options->SignType = Config::get('pay.wxPay.sign_type');
+        $options->sslCertPath = Config::get('pay.wxPay.cert_client');
+        $options->sslKeyPath = Config::get('pay.wxPay.cert_key');
+        // $options->SignType = Config::get('pay.wxPay.sign_type');
 
-        return $options;
+        return new WxPayConfig($options);
     }
 
 

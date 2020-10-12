@@ -11,15 +11,17 @@
  *  +----------------------------------------------------------------------
  *  | Date: 2020/10/10 下午6:02
  *  +----------------------------------------------------------------------
- *  | Description:   ImAdminThink
+ *  | Description:   ThinkPayment 微信支付
  *  +----------------------------------------------------------------------
  **/
 
 namespace Hahadu\ThinkPayment;
 use Hahadu\ThinkPayment\PayOptions as PayConf;
+use Hahadu\WechatPay\Kernel\WxPayData\WxPayUnifiedOrder;
+use Hahadu\WechatPay\Library\WechatNativePay;
 use think\facade\Config;
 
-class Wxpay implements PayInterface
+class WechatPay implements PayInterface
 {
     /*****
      * pc端网页支付
@@ -83,7 +85,16 @@ class Wxpay implements PayInterface
      */
     public function scan_pay($subject, $out_trade_no, $total_amount)
     {
-        // TODO: Implement scan_pay() method.
+        $notify = new WechatNativePay(PayConf::getWxpayOptions());
+        $input = new WxPayUnifiedOrder();
+        $input->SetBody($subject); //订单标题
+        $input->SetOut_trade_no($out_trade_no); //商户订单号
+        $input->SetTotal_fee($total_amount*100); //订单金额 ，单位分
+        $input->SetTrade_type("NATIVE"); //支付方式 NATIVE 用户扫码
+        $input->SetProduct_id($out_trade_no); // 二维码中包含的商品ID 扫码支付时此参数必填
+
+        $result = $notify->GetPayUrl($input);
+        return $result["code_url"];
     }
 
     /****

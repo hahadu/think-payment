@@ -4,11 +4,11 @@
     "type": "think-extend",
     "require": {
         "php": ">=7.1",
-        "alipaysdk/easysdk": "^2.0"
+        "alipaysdk/easysdk": "^2.0",
+        "endroid/qr-code": "^3.9"
 
     },
     "require-dev": {
-        "php": ">=7.1"
 
     },
     "license": "Apache-2.0",
