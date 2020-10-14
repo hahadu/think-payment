@@ -22,6 +22,7 @@ use Hahadu\ThinkPayment\AlipayLibrary\AlipayTrait;
 use Hahadu\ThinkPayment\Response\AlipayCheckResponse as aliCheck;
 use Hahadu\ThinkPayment\PayOptions as payConf;
 use think\facade\Config;
+use Exception;
 use function Stringy\create;
 
 class Alipay implements PayInterface
@@ -173,7 +174,7 @@ class Alipay implements PayInterface
      * @return false|mixed|string
      * @throws \Exception
      */
-    public function refund($out_trade_no, $refund_amount){
+    public function refund($out_trade_no, $refund_amount,$total_amount=''){
         Factory::setOptions(payConf::getAlipayOptions());
         try{
             $result = Factory::payment()->common()->refund($out_trade_no, $refund_amount);
@@ -191,7 +192,7 @@ class Alipay implements PayInterface
      * 退款查询
      * @param string $out_trade_no 订单支付时传入的商户订单号
      * @param string $out_request_no 请求退款接口时，传入的退款请求号 ，如果在退款请求时未传入，则该值为创建交易时的外部交易号
-     * @return \Alipay\EasySDK\Payment\Common\Models\AlipayTradeFastpayRefundQueryResponse|string
+     * @return string
      * @throws \Exception
      */
     public function query_refund($out_trade_no,$out_request_no){

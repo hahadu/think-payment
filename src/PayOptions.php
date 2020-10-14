@@ -60,6 +60,7 @@ class PayOptions
         $options->AppSecret = Config::get('pay.wxPay.app_secret');
         $options->sslCertPath = Config::get('pay.wxPay.cert_client');
         $options->sslKeyPath = Config::get('pay.wxPay.cert_key');
+        $options->sandbox = Config::get('pay.wxPay.sandbox');
         // $options->SignType = Config::get('pay.wxPay.sign_type');
 
         return new WxPayConfig($options);

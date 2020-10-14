@@ -75,11 +75,22 @@ interface PayInterface
 
     /****
      * 退款接口
-     * @param string $out_trade_no
-     * @param string $refund_amount
+     * 微信必填3个参数、支付宝只需要$out_trade_no、$refund_amount两个
+     * @param string $out_trade_no  商户订单号
+     * @param string $refund_amount  退款金额
+     * @param string|int $total_amount 订单金额
      * @return mixed
      */
-    public function refund($out_trade_no, $refund_amount);
+    public function refund($out_trade_no, $refund_amount,$total_amount = '');
+
+    /****
+     * 退款查询
+     * @param string $out_trade_no 订单支付时传入的商户订单号
+     * @param string $out_request_no 请求退款接口时，传入的商户退款单号
+     * @return string
+     * @throws mixed
+     */
+    public function query_refund($out_trade_no,$out_request_no='');
 
     /****
      * 验签接口
