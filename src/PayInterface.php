@@ -90,7 +90,7 @@ interface PayInterface
      * @return string
      * @throws mixed
      */
-    public function query_refund($out_trade_no,$out_request_no='');
+    public function query_refund($out_trade_no,$out_request_no);
 
     /****
      * 验签接口
