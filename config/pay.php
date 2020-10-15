@@ -34,5 +34,19 @@ return[
         //接口加密方式（可选）
         'alipay_encrypt_key' => '',
     ],
+    'wxPay' => [ //风向潮流
+        'appid' => '', // APP APPID
+        'app_id' => '', // 公众号 APPID
+        'mini_app_id' => '', // 小程序 APPID
+        'app_secret'  => '', //公众帐号secert（仅JSAPI支付的时候需要配置， 登录公众平台，进入开发者中心可设置）
+        'mini_app_secret' => '', //小程序secert（仅JSAPI支付的时候需要配置， 登录公众平台，进入开发者中心可设置）
+        'mch_id' => '', //商户号
+        'key' => '', //秘钥
+        'sign_type'=> 'HMAC-SHA256', //MD5或者HMAC-SHA256 默认HMAC-SHA256
+        'notify_url' => 'http://xxxxxx/notify',
+        'cert_client' => '', // optional，退款等情况时用到./cert/apiclient_cert.pem
+        'cert_key' => '',// optional，退款等情况时用到 ./cert/apiclient_key.pem
+    ],
+
 ];
 

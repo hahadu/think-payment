@@ -29,7 +29,7 @@ use think\facade\Config;
 class WechatPay implements PayInterface
 {
     /*****
-     * pc端网页支付
+     * pc端网页支付 前端设置每隔多长时间查询一次订单支付状态
      * @param string $subject 订单标题
      * @param string $out_trade_no 商户网站唯一订单号
      * @param string $total_amount 订单金额
@@ -152,22 +152,24 @@ class WechatPay implements PayInterface
         $input->SetOut_trade_no($out_trade_no);
         $query = WxPayApi::orderQuery(PayConf::getWxpayOptions(), $input);
         $result = [
-            'title' => $query['attach'], // 订单标题
-            'total_fee' => $query['total_fee']/100, //订单金额，元
-            'fee_type' => $query['fee_type'], //货币类型
+          //  'order_title' => $query['attach'], // 订单标题
+            'total_amount' => $query['total_fee']/100, //订单金额，元
+            'pay_currency' => $query['fee_type'], //货币类型 CNY $
+            'buyer_user_id' => (isset($query['openid'])) ? $query['openid'] : '', //用户id
             'out_trade_no' =>$query['out_trade_no'], //商户订单号
-            'transaction_id' => $query['transaction_id'], //微信交易单号
-            'trade_state' => $query['trade_state'], // 订单状态
-            'trade_state_desc' => $query['trade_state_desc'], // 订单状态
-            'time_end' => $query['time_end'],  //付款时间
-            'trade_type' => $query['trade_type'] , //支付方式
+            'trade_no' => $query['transaction_id'], //微信交易单号
+            'trade_state' => $query['trade_state'], // 订单状态 SUCCESS
+            'trade_state_desc' => $query['trade_state_desc'], // 订单状态描述
+            'send_pay_date' => $query['time_end'],  //付款时间
+            'trade_type' => $query['trade_type'] , //支付方式 JSAPI MWEB
         ];
+
         return $result;
 
     }
 
     /****
-     * 发起退款接口
+     * 退款接口
      * @param string $out_trade_no
      * @param string $refund_amount
      * @param string $total_amount 订单总金额
@@ -177,12 +179,14 @@ class WechatPay implements PayInterface
     {
         $input = new WxPayRefund();
         $input->SetOut_trade_no($out_trade_no); //商户订单号
-        $input->SetTotal_fee($total_amount);  //订单金额
-        $input->SetRefund_fee($refund_amount); //退款金额
+        $input->SetTotal_fee($total_amount*100);  //订单金额
+        $input->SetRefund_fee($refund_amount*100); //退款金额
 
-        $input->SetOut_refund_no("sdkphp".date("YmdHis"));
+        $input->SetOut_refund_no(date("YmdHis"));
         $input->SetOp_user_id((PayConf::getWxpayOptions())->GetMerchantId());
         $result = WxPayApi::refund(PayConf::getWxpayOptions(), $input);
+        $result['trade_no']=isset($result['transaction_id'])?$result['transaction_id']:''; //微信订单号
+
         return $result;
     }
     /****
@@ -200,6 +204,7 @@ class WechatPay implements PayInterface
         $input->SetOut_trade_no($out_trade_no); // 商户订单号
         //   $input->SetTransaction_id(''); //微信支付平台订单号
         $result = WxPayApi::refundQuery(PayConf::getWxpayOptions(), $input);
+        $result['trade_no']=isset($result['transaction_id'])?$result['transaction_id']:''; //微信订单号
         return $result;
     }
 

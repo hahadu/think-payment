@@ -23,7 +23,7 @@ use think\facade\Config;
 
 class PayOptions
 {
-    const SDK_VERSION  = "think-payment Beta";
+    const SDK_VERSION  = "think-payment v1";
     public function __construct(){
     }
 
@@ -61,8 +61,7 @@ class PayOptions
         $options->sslCertPath = Config::get('pay.wxPay.cert_client');
         $options->sslKeyPath = Config::get('pay.wxPay.cert_key');
         $options->sandbox = Config::get('pay.wxPay.sandbox');
-        // $options->SignType = Config::get('pay.wxPay.sign_type');
-
+        $options->SignType = Config::get('pay.wxPay.sign_type');
         return new WxPayConfig($options);
     }
 
