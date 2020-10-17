@@ -5,6 +5,7 @@
     "require": {
         "php": ">=7.1",
         "alipaysdk/easysdk": "^2.0",
+        "hahadu/wechat-pay": "*",
         "endroid/qr-code": "^3.9"
 
     },

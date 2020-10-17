@@ -1,6 +1,8 @@
 # think-payment
 thinkPHP支付模块
 
+composer安装 composer require hahadu/think-payment
+
 * 10.17：应该没什么BUG了吧？
 
 * 支付宝（依赖官方新版SDK）
