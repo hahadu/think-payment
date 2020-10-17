@@ -1,9 +1,12 @@
 # think-payment
 thinkPHP支付模块
 
-composer安装 composer require hahadu/think-payment
+composer安装 
+```
+composer require hahadu/think-payment
+```
 
-* 10.17：应该没什么BUG了吧？
+10.17：应该没什么BUG了吧？
 
 * 支付宝（依赖官方新版SDK）
 * - 订单支付（wap、pc、app、小程序、用户扫码付款）
@@ -14,7 +17,7 @@ composer安装 composer require hahadu/think-payment
 ```puml
 
 ```
-* 微信(依赖 [hahadu/wechat-pay](http://github.com/hahadu/wechat-pay)
+* 微信(依赖 [hahadu/wechat-pay](https://github.com/hahadu/wechat-pay)
 * - 订单支付（wap、app、JSAPI、小程序、用户扫码付款）
 * - 订单退款
 * - 订单查询
