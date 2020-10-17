@@ -1,7 +1,7 @@
 # think-payment
 thinkPHP支付模块
 
-已完成
+* 10.17：应该没什么BUG了吧？
 
 * 支付宝（依赖官方新版SDK）
 * - 订单支付（wap、pc、app、小程序、用户扫码付款）
