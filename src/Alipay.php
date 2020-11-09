@@ -273,7 +273,6 @@ class Alipay implements PayInterface
         try{
             $query = Factory::payment()->common()->query($out_trade_no);
             if (aliCheck::success($query)){
-                dump($query);
                 //响应参数 https://opendocs.alipay.com/apis/api_1/alipay.trade.query?scene=common
                 $result = [
                    // 'code' => $query->code, //查询返回状态码 非交易状态码
